@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block title %}Distribute.js - Execute a Kernel{% endblock %}
+{% block content %}
+
+<h2>{{blog_post.title}}</h2>
+<div class='container'>
+      <h5>Name: {{kernel.title}}</h5>
+      
+      <h5>Uploded on {{kernel.timestamp.strftime('%Y-%m-%d %H:%M:%S')}}</h5>
+
+      <div>
+        {{kenel.body}}
+      </div>
+</div>
+
+{% endblock %}
