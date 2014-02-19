@@ -1,10 +1,34 @@
 {% extends "layout.html" %}
-{% block title %}Basic Blog - Home{% endblock %}
+{% block title %}Home{% endblock %}
 {% block content %}
-  <div class="jumbotron">
-    <h1>Basic Blog stub</h1>
-    <p>
-      Hello World!
-    </p>
+  <div class="blog-header">
+    <h1 class="blog-title">Basic Blog</h1>
+    <p class="lead blog-description">A sample implementation of a blog using <a href="http://flask.pocoo.org/">Flask</a> and <a href="http://getbootstrap.com/">Bootstrap</a>.</p>
+    <div><h2><a href="/compose" class="btn btn-primary">Compose New Post</a></h2></div>
+  </div>
+
+  <div>
+  {% for blog_post in blog_posts %}
+    <div class="blog-post jumbotron">
+  		<h4 class="blog-post-title">
+        {{blog_post.title}}
+      </h4>
+      <p class="blog-post-meta">
+        <a href ="/post/{{blog_post.post_id}}">
+          <span class="glyphicon glyphicon-time"></span>
+          {{blog_post.pretty_time}}
+        </a> &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href ="/post/{{blog_post.post_id}}#comments">
+          <span class="glyphicon glyphicon-comment"></span>
+          {{blog_post.num_comments}} Comments
+        </a>
+      </p>
+      {{blog_post.body|safe}}
+      <form action="/delete_post" method="post" role="form" class="form-inline pull-right">
+        <input type="hidden" name="post_id" value="{{blog_post.post_id}}" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+    </div>
+  {% endfor %}
   </div>
 {% endblock %}

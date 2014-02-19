@@ -1,16 +1,63 @@
 {% extends "layout.html" %}
-{% block title %}Distribute.js - Execute a Kernel{% endblock %}
+{% block title %}{{blog_post.title}}{% endblock %}
 {% block content %}
 
-<h2>{{blog_post.title}}</h2>
 <div class='container'>
-      <h5>Name: {{kernel.title}}</h5>
-      
-      <h5>Uploded on {{kernel.timestamp.strftime('%Y-%m-%d %H:%M:%S')}}</h5>
 
-      <div>
-        {{kenel.body}}
+  <div class="blog-post">
+    <h4 class="blog-post-title">
+      {{blog_post.title}}
+    </h4>
+    <p class="blog-post-meta">
+      <span class="glyphicon glyphicon-time"></span>
+      {{blog_post.pretty_time}}
+    </p>
+    {{blog_post.body|safe}}
+    <form action="/delete_post" method="post" role="form" class="form-inline pull-right">
+      <input type="hidden" name="post_id" value="{{blog_post.post_id}}" />
+      <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+  </div>
+  
+  <div class="well">
+    <form role="form" method="post">
+      <div class="form-group">
+        <label for="post_body">Leave a Comment</label>  
+        <textarea name="comment_body" class="form-control" rows="3"></textarea>
       </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+
+  <div id="comments" class="container">
+  {% for comment in comments %}
+  <div id={{comment.comment_id}} class="blog-post">
+    <p class="blog-post-meta">
+      <a href="#{{comment.comment_id}}">
+        <span class="glyphicon glyphicon-time"></span>
+        {{comment.pretty_time}}
+      </a>
+    </p>
+    {{comment.body|safe}}
+    <form action="/delete_comment" method="post" role="form" class="form-inline">
+      <input type="hidden" name="comment_id" value="{{comment.comment_id}}" />
+      <button type="submit" class="btn btn-danger btn-xs">Delete</button>
+    </form>
+  </div>
+  {% endfor %}
+  </div>
 </div>
 
+
+<script>
+$('a').click( function() { your_code_here; return false; } );
+function deletePost() {
+  $.ajax({type: 'DELETE'});
+}
+function deleteComment(comment_id) {
+  $.ajax({
+    url:  'comment/'+comment_id
+    type: 'DELETE'});
+}
+</script>
 {% endblock %}

@@ -2,8 +2,9 @@
 
 <html>
 <head>
-  <title>{% block title %}{% endblock %}</title><!-- Latest compiled and minified Bootstrap CSS -->
+  <title>My Blog – {% block title %}{% endblock %}</title>
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="{{url_for('static', filename='blog.css')}}" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -28,6 +29,7 @@
   
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js" type="text/javascript"></script>
+
   {% block extra_javascript %} {% endblock %}
 </body>
 </html>
