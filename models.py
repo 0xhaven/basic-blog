@@ -3,7 +3,8 @@ from flask import Markup
 
 db = SQLAlchemy()
 
-#Model for a blog post: 
+#Model for a blog post:
+#All `title` and `body` strings are guaranteed to already be HTML escaped
 class BlogPost(db.Model):
   post_id       = db.Column(db.Integer, primary_key=True, autoincrement=True)
   timestamp     = db.Column(db.DateTime, default=db.func.now())
@@ -31,6 +32,7 @@ class BlogPost(db.Model):
     self.body  = body
 
 #Model for a comment
+#`body` string is guaranteed to already be HTML escaped
 class Comment(db.Model):
   comment_id    = db.Column(db.Integer, primary_key=True, autoincrement=True)
   timestamp     = db.Column(db.DateTime, default=db.func.now())

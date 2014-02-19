@@ -22,6 +22,8 @@ db.create_all()
 safe_markdown = Markdown(safe_mode='escape')
 
 ### Routes
+#Home page containing list of blog posts
+#  GET returns index template, with list of all `blog_posts`
 @application.route('/')
 def index_page():
   try:
@@ -30,6 +32,13 @@ def index_page():
     abort(500)
   return render_template('index.html', blog_posts=blog_posts)
 
+#"Compose New Post" page/form endpoint
+#  GET returns "Compose New Post" form
+#
+#  POST Client submits parameters:
+#    `post_title` as raw string (to by html-escaped)
+#    `post_body`  as Markdown string (to be marked up to HTML, escpaing raw HTML)
+#  After post is saved, redirect to `/post/<post_id>`
 @application.route('/compose', methods=['GET', 'POST'])
 def compose_page():
   if request.method == 'GET':
@@ -38,7 +47,6 @@ def compose_page():
     try:
       parsed_post_name = bleach.clean(request.form['post_title'])
       parsed_post_body = safe_markdown.convert(request.form['post_body'])
-      print parsed_post_name, parsed_post_body
       blog_post = BlogPost(parsed_post_name, parsed_post_body)
       db.session.add(blog_post)
       db.session.commit()
@@ -46,7 +54,14 @@ def compose_page():
       abort(400)
     return redirect("/post/{}".format(blog_post.post_id), code=303)
     
-
+#Standalone Blog Post/Comments page/comment form endpoint
+#  GET returns blog post along with comments and new comment form.
+#  Returns 404 if post not found
+#
+#  POST saves new comment with parameter:
+#    `comment_body` as Markdown string (to be marked up to HTML, escpaing raw HTML)
+#  After comment is saved, redirect to relative link
+#      `/post/<post_id>#<comment_id>` at head of comment.
 @application.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def blogpost(post_id):
   if request.method == 'GET':
@@ -68,6 +83,11 @@ def blogpost(post_id):
   else: #this should never be called
     abort(500)
 
+#Endpoint to delete blog post
+#  POST deletes blog post with paramter
+#    `post_id` as primary key of post to be deleted
+#  Returns 404 if post not found
+#  After successful deletion, redirect to index
 @application.route('/delete_post', methods=['POST'])
 def delete_post():
   try:
@@ -78,6 +98,11 @@ def delete_post():
     abort(404)
   return redirect("/", code=303)
 
+#Endpoint to delete comment
+#  POST deletes comment with paramter:
+#    `comment_id` as primary key of comment to be deleted
+#  Returns 404 if comment not found
+#  After successful deletion, redirect to start of comments (`/post/<post_id>#comments`)
 @application.route('/delete_comment', methods=['POST'])
 def delete_comment():
   try:
@@ -87,7 +112,7 @@ def delete_comment():
     db.session.commit()
   except:
     abort(404)
-  return redirect("/post/{}".format(post_id), code=303)
+  return redirect("/post/{}#comments".format(post_id), code=303)
 
 if __name__ == '__main__':
   application.run(debug=True)
