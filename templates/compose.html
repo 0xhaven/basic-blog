@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}Basic Blog - Compose New Post{% endblock %}
+{% block content %}
+	<form method="post" role="form" class="form-horizontal">  
+      <legend>Compose New Post</legend>  
+      <div class="form-group">  
+        <label for="post_title">Post Title</label>  
+        <input type="text" name="post_title" class="form-control">  
+      </div>  
+      <div class="form-group">  
+        <label for="post_body">Post Body</label>  
+        <textarea name="post_body" rows="6" class="form-control"></textarea>
+        <p class="help-block">*Format using <a href="http://daringfireball.net/projects/markdown/basics">Markdown</a></p>
+      </div>  
+      <button type="submit" class="btn btn-primary">Submit Post</button>  
+	</form> 
+{% endblock %}
